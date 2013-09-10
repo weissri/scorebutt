@@ -1,0 +1,62 @@
+
+Elm.Graphing = function(elm){
+  var N = Elm.Native, _N = N.Utils(elm), _L = N.List(elm), _E = N.Error(elm), _J = N.JavaScript(elm), _str = _J.toString, $moduleName = 'Graphing';
+  var Text = Elm.Text(elm);
+  var Text = Elm.Text(elm);
+  var Basics = Elm.Basics(elm);
+  var Signal = Elm.Signal(elm);
+  var List = Elm.List(elm);
+  var Maybe = Elm.Maybe(elm);
+  var Time = Elm.Time(elm);
+  var Prelude = Elm.Prelude(elm);
+  var Graphics = Graphics || {};
+  Graphics.Element = Elm.Graphics.Element(elm);
+  var Color = Elm.Color(elm);
+  var Graphics = Graphics || {};
+  Graphics.Collage = Elm.Graphics.Collage(elm);
+  var _op = {};
+  var line = F5(function(w, h, x, y, cs){
+    return function(){
+      var hw = (Basics.toFloat(w)/2);
+      var hh = (Basics.toFloat(h)/2);
+      var fs = A2(List.map, function(arg1){
+        return function(){
+          switch (arg1.ctor) {
+            case '_Tuple2':
+              return A2(Graphics.Collage.traced, Graphics.Collage.solid(arg1._0), Graphics.Collage.path(A2(List.map, function(arg1){
+                return function(){
+                  switch (arg1.ctor) {
+                    case '_Tuple2':
+                      return {ctor:"_Tuple2", _0:(arg1._0*x), _1:(arg1._1*y)};
+                  }_E.Case($moduleName,'on line 7, column 70 to 77')}();}, arg1._1)));
+          }_E.Case($moduleName,'on line 7, column 28 to 82')}();}, cs);
+      var gs = A2(List.map, Graphics.Collage.move({ctor:"_Tuple2", _0:(0-hw), _1:(0-hh)}), fs);
+      return A3(Graphics.Collage.collage, w, h, gs);}();});
+  var timeline = F5(function(w, h, x, y, xs){
+    return function(){
+      var f = function(qs){
+        return function(){
+          switch (qs.ctor) {
+            case '::':
+              switch (qs._0.ctor) {
+                case '_Tuple2':
+                  return A2(List.map, function(arg1){
+                    return function(){
+                      switch (arg1.ctor) {
+                        case '_Tuple2':
+                          return {ctor:"_Tuple2", _0:Basics.abs((arg1._0-qs._0._0)), _1:arg1._1};
+                      }_E.Case($moduleName,'on line 14, column 37 to 52')}();}, qs);
+              }break;
+            case '[]':
+              return _J.toList([]);
+          }_E.Case($moduleName,'between lines 13 and 15')}();};
+      return A4(line, w, h, x, y)(A2(List.map, function(arg1){
+        return function(){
+          switch (arg1.ctor) {
+            case '_Tuple2':
+              return {ctor:"_Tuple2", _0:arg1._0, _1:f(arg1._1)};
+          }_E.Case($moduleName,'on line 16, column 36 to 42')}();}, xs));}();});
+  return elm.Graphing = {
+    _op : _op, 
+    line : line, 
+    timeline : timeline};};

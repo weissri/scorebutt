@@ -1,0 +1,46 @@
+
+Elm.Scenario = function(elm){
+  var N = Elm.Native, _N = N.Utils(elm), _L = N.List(elm), _E = N.Error(elm), _J = N.JavaScript(elm), _str = _J.toString, $moduleName = 'Scenario';
+  var Text = Elm.Text(elm);
+  var Text = Elm.Text(elm);
+  var Basics = Elm.Basics(elm);
+  var Signal = Elm.Signal(elm);
+  var List = Elm.List(elm);
+  var Maybe = Elm.Maybe(elm);
+  var Time = Elm.Time(elm);
+  var Prelude = Elm.Prelude(elm);
+  var Graphics = Graphics || {};
+  Graphics.Element = Elm.Graphics.Element(elm);
+  var Color = Elm.Color(elm);
+  var Graphics = Graphics || {};
+  Graphics.Collage = Elm.Graphics.Collage(elm);
+  var Graphics = Graphics || {};
+  Graphics.Input = Elm.Graphics.Input(elm);
+  var _op = {};
+  var scenario = F4(function(description, selectBox, selectSig, options){
+    return A2(Graphics.Element.flow, Graphics.Element.down, _J.toList([description,selectBox,function(){
+      switch (selectSig) {
+        case false:
+          return A2(Graphics.Element.spacer, 0, 0);
+        case true:
+          return A2(Graphics.Element.beside, A2(Graphics.Element.spacer, 20, 1), A2(Graphics.Element.flow, Graphics.Element.down, options));
+      }_E.Case($moduleName,'between lines 15 and 18')}()]));});
+  var labeledCheckbox = function(lbl){
+    return function(){
+      var _1 = Graphics.Input.checkbox(false);
+      var elm = function(){
+        switch (_1.ctor) {
+          case '_Tuple2':
+            return _1._0;
+        }_E.Case($moduleName,'on line 6, column 39 to 55')}();
+      var sig = function(){
+        switch (_1.ctor) {
+          case '_Tuple2':
+            return _1._1;
+        }_E.Case($moduleName,'on line 6, column 39 to 55')}();
+      return {ctor:"_Tuple2", _0:A2(Signal._op['<~'], function(elm){
+        return A2(Graphics.Element.beside, elm, A2(Graphics.Element.beside, A2(Graphics.Element.spacer, 10, 1), Text.plainText(lbl)));}, elm), _1:sig};}();};
+  return elm.Scenario = {
+    _op : _op, 
+    labeledCheckbox : labeledCheckbox, 
+    scenario : scenario};};

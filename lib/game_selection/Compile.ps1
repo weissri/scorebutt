@@ -1,0 +1,1 @@
+elm GameSelection.elm --make --runtime=elm-runtime.js

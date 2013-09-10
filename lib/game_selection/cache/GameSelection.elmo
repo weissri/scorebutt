@@ -1,0 +1,101 @@
+
+Elm.GameSelection = function(elm){
+  var N = Elm.Native, _N = N.Utils(elm), _L = N.List(elm), _E = N.Error(elm), _J = N.JavaScript(elm), _str = _J.toString, $moduleName = 'GameSelection';
+  var Text = Elm.Text(elm);
+  var Text = Elm.Text(elm);
+  var Basics = Elm.Basics(elm);
+  var Signal = Elm.Signal(elm);
+  var List = Elm.List(elm);
+  var Maybe = Elm.Maybe(elm);
+  var Time = Elm.Time(elm);
+  var Prelude = Elm.Prelude(elm);
+  var Graphics = Graphics || {};
+  Graphics.Element = Elm.Graphics.Element(elm);
+  var Color = Elm.Color(elm);
+  var Graphics = Graphics || {};
+  Graphics.Collage = Elm.Graphics.Collage(elm);
+  var Graphics = Graphics || {};
+  Graphics.Input = Elm.Graphics.Input(elm);
+  var Scenarios = Elm.Scenarios(elm);
+  var ScoreGraph = Elm.ScoreGraph(elm);
+  var FieldGen = Elm.FieldGen(elm);
+  var _op = {};
+  var welcome = Text.text('<div style="height:0;width:0;">&nbsp;</div><pre><code>\nWelcome to Edurange\n===================\n\nSelect the scenarios you want to play.</code></pre><div style="height:0;width:0;">&nbsp;</div>');
+  var team2Players = FieldGen.fieldGen(_str('Team 2 Player Name'));
+  var team1Players = FieldGen.fieldGen(_str('Team 1 Player Name'));
+  var draw = F6(function(startGame, scenarios, scoreGraph, team1, team2, gameStarted){
+    return (gameStarted ? scoreGraph : (Basics.otherwise ? A2(Graphics.Element.beside, A2(Graphics.Element.spacer, 20, 1), A2(Graphics.Element.flow, Graphics.Element.down, _J.toList([welcome,A2(Graphics.Element.flow, Graphics.Element.down, scenarios),A2(Graphics.Element.spacer, 1, 40),Basics.fst(team1),A2(Graphics.Element.spacer, 1, 40),Basics.fst(team2),A2(Graphics.Element.spacer, 1, 40),startGame]))) : _E.If($moduleName,'between lines 33 and 44')));});
+  var Team = F4(function(a, b, c, d){
+    return {
+      _:{
+      },
+      name:a,
+      players:d,
+      scores:c,
+      teamColor:b};});
+  var Game = function(a){
+    return {
+      _:{
+      },
+      teams:a};};
+  var _0 = Graphics.Input.field(_str('Team 2 Name'));
+  var team2NameE = function(){
+    switch (_0.ctor) {
+      case '_Tuple2':
+        return _0._0;
+    }_E.Case($moduleName,'on line 47, column 27 to 52')}();
+  var team2NameS = function(){
+    switch (_0.ctor) {
+      case '_Tuple2':
+        return _0._1;
+    }_E.Case($moduleName,'on line 47, column 27 to 52')}();
+  var _7 = Graphics.Input.field(_str('Team 1 Name'));
+  var team1NameE = function(){
+    switch (_7.ctor) {
+      case '_Tuple2':
+        return _7._0;
+    }_E.Case($moduleName,'on line 46, column 27 to 52')}();
+  var team1NameS = function(){
+    switch (_7.ctor) {
+      case '_Tuple2':
+        return _7._1;
+    }_E.Case($moduleName,'on line 46, column 27 to 52')}();
+  var _14 = function(){
+    var _15 = Graphics.Input.button(_str('Start Game'));
+    var btn = function(){
+      switch (_15.ctor) {
+        case '_Tuple2':
+          return _15._0;
+      }_E.Case($moduleName,'on line 21, column 21 to 46')}();
+    var start = function(){
+      switch (_15.ctor) {
+        case '_Tuple2':
+          return _15._1;
+      }_E.Case($moduleName,'on line 21, column 21 to 46')}();
+    return {ctor:"_Tuple2", _0:btn, _1:A3(Signal.foldp, F2(function(arg2, go){
+      return function(){
+        return Basics.not(go);}();}), false, start)};}();
+  var gameStarted = function(){
+    switch (_14.ctor) {
+      case '_Tuple2':
+        return _14._1;
+    }_E.Case($moduleName,'between lines 21 and 22')}();
+  var startGame = function(){
+    switch (_14.ctor) {
+      case '_Tuple2':
+        return _14._0;
+    }_E.Case($moduleName,'between lines 21 and 22')}();
+  var main = A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['<~'], draw(startGame), Signal.combine(_J.toList([Scenarios.scenario1,Scenarios.scenario2,Scenarios.scenario3]))), ScoreGraph.scoreGraph), team1Players), team2Players), gameStarted);
+  return elm.GameSelection = {
+    _op : _op, 
+    welcome : welcome, 
+    gameStarted : gameStarted, 
+    startGame : startGame, 
+    draw : draw, 
+    team1NameE : team1NameE, 
+    team1NameS : team1NameS, 
+    team2NameE : team2NameE, 
+    team2NameS : team2NameS, 
+    team1Players : team1Players, 
+    team2Players : team2Players, 
+    main : main};};
