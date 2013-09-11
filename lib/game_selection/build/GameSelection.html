@@ -29,14 +29,38 @@ Elm.GameSelection = function(elm){
   var Graphics = Graphics || {};
   Graphics.Input = Elm.Graphics.Input(elm);
   var Scenarios = Elm.Scenarios(elm);
-  var ScoreGraph = Elm.ScoreGraph(elm);
   var FieldGen = Elm.FieldGen(elm);
+  var Mouse = Elm.Mouse(elm);
+  var Graph = Elm.Graph(elm);
+  var Window = Elm.Window(elm);
   var _op = {};
-  var welcome = Text.text('<div style="height:0;width:0;">&nbsp;</div><pre><code>\nWelcome to Edurange\n===================\n\nSelect the scenarios you want to play.</code></pre><div style="height:0;width:0;">&nbsp;</div>');
+  var welcome = Text.text('<div style="height:0;width:0;">&nbsp;</div><pre><code>\nWelcome to Edurange\n===================\n\nSelect the scenarios you want to play. \nEach scenario you select will increase \nthe number of VM&#39;s that EDURange starts.</code></pre><div style="height:0;width:0;">&nbsp;</div>');
+  var team4Scores = A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
+    return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.constant(Color.purple)), A3(Signal.foldp, F2(function(t, xs){
+    return List.take(5000)(_L.Cons({ctor:"_Tuple2", _0:t, _1:((Basics.snd(List.head(xs))+(Basics.cos(t)*6))+0.1)},xs));}), _J.toList([{ctor:"_Tuple2", _0:0, _1:50}]), Time.every((Time.second/10))));
+  var team3Scores = A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
+    return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.constant(Color.green)), A3(Signal.foldp, F2(function(t, xs){
+    return List.take(5000)(_L.Cons({ctor:"_Tuple2", _0:t, _1:((Basics.snd(List.head(xs))+(Basics.sin(t)*6))+0.1)},xs));}), _J.toList([{ctor:"_Tuple2", _0:0, _1:50}]), Time.every((Time.second/10))));
+  var team2Scores = A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
+    return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.constant(Color.blue)), A3(Signal.foldp, F2(function(arg2, xs){
+    return function(){
+      switch (arg2.ctor) {
+        case '_Tuple2':
+          return List.take(5000)(_L.Cons({ctor:"_Tuple2", _0:arg2._0, _1:Basics.toFloat(arg2._1)},xs));
+      }_E.Case($moduleName,'on line 21, column 58 to 90')}();}), _J.toList([]), Time.timestamp(A2(Signal.sampleOn, Time.fps(10), Mouse.y))));
   var team2Players = FieldGen.fieldGen(_str('Team 2 Player Name'));
+  var team1Scores = A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
+    return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.constant(A3(Color.rgb, 255, 100, 0))), A3(Signal.foldp, F2(function(arg2, xs){
+    return function(){
+      switch (arg2.ctor) {
+        case '_Tuple2':
+          return List.take(5000)(_L.Cons({ctor:"_Tuple2", _0:arg2._0, _1:Basics.toFloat(arg2._1)},xs));
+      }_E.Case($moduleName,'on line 16, column 69 to 101')}();}), _J.toList([]), Time.timestamp(A2(Signal.sampleOn, Time.fps(10), Mouse.x))));
   var team1Players = FieldGen.fieldGen(_str('Team 1 Player Name'));
-  var draw = F6(function(startGame, scenarios, scoreGraph, team1, team2, gameStarted){
-    return (gameStarted ? scoreGraph : (Basics.otherwise ? A2(Graphics.Element.beside, A2(Graphics.Element.spacer, 20, 1), A2(Graphics.Element.flow, Graphics.Element.down, _J.toList([welcome,A2(Graphics.Element.flow, Graphics.Element.down, scenarios),A2(Graphics.Element.spacer, 1, 40),Basics.fst(team1),A2(Graphics.Element.spacer, 1, 40),Basics.fst(team2),A2(Graphics.Element.spacer, 1, 40),startGame]))) : _E.If($moduleName,'between lines 33 and 44')));});
+  var scoreGraph = A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['<~'], F3(function(xs, wx, wy){
+    return A5(Graph.timeline, wx, (wy/2|0), (Basics.toFloat(wx)/(Time.minute*5)), (1/2), xs);}), Signal.combine(_J.toList([team1Scores,team2Scores,team3Scores,team4Scores]))), Window.width), Window.height);
+  var draw = F9(function(gameStarted, startGame, scenarios, team1, team2, scoreGraph, scenarioPreview, chatbox, messages){
+    return (gameStarted ? A2(Graphics.Element.flow, Graphics.Element.down, _J.toList([scoreGraph,A2(Graphics.Element.beside, A2(Graphics.Element.spacer, 20, 1), chatbox),A2(Graphics.Element.beside, A2(Graphics.Element.spacer, 20, 1), A2(Graphics.Element.flow, Graphics.Element.down, A2(List.map, Text.plainText, messages)))])) : (Basics.otherwise ? A2(Graphics.Element.beside, A2(Graphics.Element.spacer, 20, 1), A2(Graphics.Element.beside, Graphics.Element.width(400)(A2(Graphics.Element.flow, Graphics.Element.down, _J.toList([welcome,A2(Graphics.Element.flow, Graphics.Element.down, scenarios),A2(Graphics.Element.spacer, 1, 40),Basics.fst(team1),A2(Graphics.Element.spacer, 1, 40),Basics.fst(team2),A2(Graphics.Element.spacer, 1, 40),startGame]))), A2(Graphics.Element.beside, A2(Graphics.Element.spacer, 40, 1), scenarioPreview))) : _E.If($moduleName,'between lines 75 and 96')));});
   var Team = F4(function(a, b, c, d){
     return {
       _:{
@@ -50,66 +74,89 @@ Elm.GameSelection = function(elm){
       _:{
       },
       teams:a};};
-  var _0 = Graphics.Input.field(_str('Team 2 Name'));
+  var _6 = Graphics.Input.field(_str('Team 2 Name'));
   var team2NameE = function(){
-    switch (_0.ctor) {
+    switch (_6.ctor) {
       case '_Tuple2':
-        return _0._0;
-    }_E.Case($moduleName,'on line 47, column 27 to 52')}();
+        return _6._0;
+    }_E.Case($moduleName,'on line 51, column 27 to 52')}();
   var team2NameS = function(){
-    switch (_0.ctor) {
+    switch (_6.ctor) {
       case '_Tuple2':
-        return _0._1;
-    }_E.Case($moduleName,'on line 47, column 27 to 52')}();
-  var _7 = Graphics.Input.field(_str('Team 1 Name'));
+        return _6._1;
+    }_E.Case($moduleName,'on line 51, column 27 to 52')}();
+  var _13 = Graphics.Input.field(_str('Team 1 Name'));
   var team1NameE = function(){
-    switch (_7.ctor) {
+    switch (_13.ctor) {
       case '_Tuple2':
-        return _7._0;
-    }_E.Case($moduleName,'on line 46, column 27 to 52')}();
+        return _13._0;
+    }_E.Case($moduleName,'on line 50, column 27 to 52')}();
   var team1NameS = function(){
-    switch (_7.ctor) {
+    switch (_13.ctor) {
       case '_Tuple2':
-        return _7._1;
-    }_E.Case($moduleName,'on line 46, column 27 to 52')}();
-  var _14 = function(){
-    var _15 = Graphics.Input.button(_str('Start Game'));
+        return _13._1;
+    }_E.Case($moduleName,'on line 50, column 27 to 52')}();
+  var _20 = function(){
+    var _21 = Graphics.Input.button(_str('Start Game'));
     var btn = function(){
-      switch (_15.ctor) {
+      switch (_21.ctor) {
         case '_Tuple2':
-          return _15._0;
-      }_E.Case($moduleName,'on line 21, column 21 to 46')}();
+          return _21._0;
+      }_E.Case($moduleName,'on line 47, column 21 to 46')}();
     var start = function(){
-      switch (_15.ctor) {
+      switch (_21.ctor) {
         case '_Tuple2':
-          return _15._1;
-      }_E.Case($moduleName,'on line 21, column 21 to 46')}();
+          return _21._1;
+      }_E.Case($moduleName,'on line 47, column 21 to 46')}();
     return {ctor:"_Tuple2", _0:btn, _1:A3(Signal.foldp, F2(function(arg2, go){
       return function(){
         return Basics.not(go);}();}), false, start)};}();
   var gameStarted = function(){
-    switch (_14.ctor) {
+    switch (_20.ctor) {
       case '_Tuple2':
-        return _14._1;
-    }_E.Case($moduleName,'between lines 21 and 22')}();
+        return _20._1;
+    }_E.Case($moduleName,'between lines 47 and 48')}();
   var startGame = function(){
-    switch (_14.ctor) {
+    switch (_20.ctor) {
       case '_Tuple2':
-        return _14._0;
-    }_E.Case($moduleName,'between lines 21 and 22')}();
-  var main = A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['<~'], draw(startGame), Signal.combine(_J.toList([Scenarios.scenario1,Scenarios.scenario2,Scenarios.scenario3]))), ScoreGraph.scoreGraph), team1Players), team2Players), gameStarted);
+        return _20._0;
+    }_E.Case($moduleName,'between lines 47 and 48')}();
+  var _35 = FieldGen.chatbox;
+  var message = function(){
+    switch (_35.ctor) {
+      case '_Tuple2':
+        return _35._1;
+    }_E.Case($moduleName,'on line 59, column 20 to 27')}();
+  var msgBox = function(){
+    switch (_35.ctor) {
+      case '_Tuple2':
+        return _35._0;
+    }_E.Case($moduleName,'on line 59, column 20 to 27')}();
+  var messages = A3(Signal.foldp, F2(function(x, y){
+    return _L.Cons(x,y);}), _J.toList([]), message);
+  var main = A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['<~'], draw, gameStarted), Signal.constant(startGame)), Signal.combine(_J.toList([Scenarios.scenario1,Scenarios.scenario2,Scenarios.scenario3]))), team1Players), team2Players), scoreGraph), Signal.constant(Graphics.Element.flow(Graphics.Element.down)(A2(List.map, function(arg1){
+    return function(){
+      return Text.plainText(_str('Scenario Preview Goes Over Here'));}();}, _L.range(1,40))))), msgBox), messages);
   return elm.GameSelection = {
     _op : _op, 
+    team1Scores : team1Scores, 
+    team2Scores : team2Scores, 
+    team3Scores : team3Scores, 
+    team4Scores : team4Scores, 
+    scoreGraph : scoreGraph, 
     welcome : welcome, 
     gameStarted : gameStarted, 
     startGame : startGame, 
-    draw : draw, 
     team1NameE : team1NameE, 
     team1NameS : team1NameS, 
     team2NameE : team2NameE, 
     team2NameS : team2NameS, 
     team1Players : team1Players, 
     team2Players : team2Players, 
+    message : message, 
+    msgBox : msgBox, 
+    messages : messages, 
+    draw : draw, 
     main : main};};
 Elm.FieldGen = function(elm){
   var N = Elm.Native, _N = N.Utils(elm), _L = N.List(elm), _E = N.Error(elm), _J = N.JavaScript(elm), _str = _J.toString, $moduleName = 'FieldGen';
@@ -129,6 +176,7 @@ Elm.FieldGen = function(elm){
   var Dict = Elm.Dict(elm);
   var Graphics = Graphics || {};
   Graphics.Input = Elm.Graphics.Input(elm);
+  var Keyboard = Elm.Keyboard(elm);
   var _op = {};
   var remove = F2(function(n, xs){
     return function(){
@@ -136,7 +184,7 @@ Elm.FieldGen = function(elm){
         case '::':
           switch (xs._0.ctor) {
             case '_Tuple2':
-              return (_N.eq(xs._0._0,n) ? xs._1 : (Basics.otherwise ? _L.Cons({ctor:"_Tuple2", _0:xs._0._0, _1:xs._0._1},A2(remove, n, xs._1)) : _E.If($moduleName,'on line 40, column 17 to 60')));
+              return (_N.eq(xs._0._0,n) ? xs._1 : (Basics.otherwise ? _L.Cons({ctor:"_Tuple2", _0:xs._0._0, _1:xs._0._1},A2(remove, n, xs._1)) : _E.If($moduleName,'on line 44, column 17 to 60')));
           }break;
       }
       return _J.toList([]);}();});
@@ -146,7 +194,7 @@ Elm.FieldGen = function(elm){
         case '::':
           switch (xs._0.ctor) {
             case '_Tuple2':
-              return (_N.eq(xs._0._0,n) ? _L.Cons({ctor:"_Tuple2", _0:n, _1:v},xs._1) : (Basics.otherwise ? _L.Cons({ctor:"_Tuple2", _0:xs._0._0, _1:xs._0._1},A3(insert, n, v, xs._1)) : _E.If($moduleName,'on line 36, column 18 to 71')));
+              return (_N.eq(xs._0._0,n) ? _L.Cons({ctor:"_Tuple2", _0:n, _1:v},xs._1) : (Basics.otherwise ? _L.Cons({ctor:"_Tuple2", _0:xs._0._0, _1:xs._0._1},A3(insert, n, v, xs._1)) : _E.If($moduleName,'on line 39, column 18 to 71')));
           }break;
       }
       return _J.toList([{ctor:"_Tuple2", _0:n, _1:v}]);}();});
@@ -164,19 +212,30 @@ Elm.FieldGen = function(elm){
                     case '_Tuple2':
                       return A3(fg.field, F2(function(v0, v1){
                         return {ctor:"_Tuple2", _0:v0, _1:v1};})(arg1._0), txt, arg1._1);
-                  }_E.Case($moduleName,'on line 19, column 23 to 46')}();}, arg1._1))), _1:A2(List.map, function($){
+                  }_E.Case($moduleName,'on line 20, column 23 to 46')}();}, arg1._1))), _1:A2(List.map, function($){
                 return function(_){
                   return _.string;}(Basics.snd($));}, arg1._1)};
-          }_E.Case($moduleName,'between lines 18 and 19')}();})(A3(Signal.foldp, F2(function(arg2, arg1){
+          }_E.Case($moduleName,'between lines 19 and 20')}();})(A3(Signal.foldp, F2(function(arg2, arg1){
         return function(){
           switch (arg1.ctor) {
             case '_Tuple2':
               return function(){
                 switch (arg2.ctor) {
                   case '_Tuple2':
-                    return (_N.eq(arg2._0,(0-1)) ? (_N.eq(arg2._1.string,_str('')) ? {ctor:"_Tuple2", _0:arg1._0, _1:arg1._1} : (Basics.otherwise ? {ctor:"_Tuple2", _0:(arg1._0+1), _1:A3(insert, arg1._0, arg2._1, arg1._1)} : _E.If($moduleName,'between lines 25 and 27'))) : (Basics.otherwise ? (_N.eq(arg2._1.string,_str('')) ? {ctor:"_Tuple2", _0:arg1._0, _1:A2(remove, arg2._0, arg1._1)} : (Basics.otherwise ? {ctor:"_Tuple2", _0:arg1._0, _1:A3(insert, arg2._0, arg2._1, arg1._1)} : _E.If($moduleName,'between lines 28 and 32'))) : _E.If($moduleName,'between lines 24 and 32')));
-                }_E.Case($moduleName,'between lines 24 and 32')}();
-          }_E.Case($moduleName,'between lines 24 and 32')}();}), {ctor:"_Tuple2", _0:0, _1:_J.toList([])}, fg.events));}();};
+                    return (_N.eq(arg2._0,(0-1)) ? (_N.eq(arg2._1.string,_str('')) ? {ctor:"_Tuple2", _0:arg1._0, _1:arg1._1} : (Basics.otherwise ? {ctor:"_Tuple2", _0:(arg1._0+1), _1:A3(insert, arg1._0, arg2._1, arg1._1)} : _E.If($moduleName,'between lines 26 and 28'))) : (Basics.otherwise ? (_N.eq(arg2._1.string,_str('')) ? {ctor:"_Tuple2", _0:arg1._0, _1:A2(remove, arg2._0, arg1._1)} : (Basics.otherwise ? {ctor:"_Tuple2", _0:arg1._0, _1:A3(insert, arg2._0, arg2._1, arg1._1)} : _E.If($moduleName,'between lines 29 and 33'))) : _E.If($moduleName,'between lines 25 and 33')));
+                }_E.Case($moduleName,'between lines 25 and 33')}();
+          }_E.Case($moduleName,'between lines 25 and 33')}();}), {ctor:"_Tuple2", _0:0, _1:_J.toList([])}, fg.events));}();};
+  var chatbox = function(){
+    var cbGen = Graphics.Input.fields(Graphics.Input.emptyFieldState);
+    var fieldState = A3(Signal.foldp, F2(function(arg2, arg1){
+      return function(){
+        return function(){
+          switch (arg2.ctor) {
+            case '_Tuple2':
+              return ((arg2._0&&!_N.eq(arg2._1.string,_str(''))) ? {ctor:"_Tuple2", _0:A3(cbGen.field, Basics.id, _str('Say something'), Graphics.Input.emptyFieldState), _1:arg2._1.string} : (Basics.otherwise ? {ctor:"_Tuple2", _0:A3(cbGen.field, Basics.id, _str('Say something'), arg2._1), _1:_str('')} : _E.If($moduleName,'between lines 52 and 54')));
+          }_E.Case($moduleName,'between lines 52 and 54')}();}();}), {ctor:"_Tuple2", _0:A3(cbGen.field, Basics.id, _str('Say something'), Graphics.Input.emptyFieldState), _1:_str('')}, A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
+      return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.dropRepeats(Keyboard.enter)), cbGen.events));
+    return {ctor:"_Tuple2", _0:A2(Signal._op['<~'], Basics.fst, fieldState), _1:A2(Signal._op['<~'], Basics.snd, fieldState)};}();
   var FieldGen = F2(function(a, b){
     return {
       _:{
@@ -185,51 +244,8 @@ Elm.FieldGen = function(elm){
       field:b};});
   return elm.FieldGen = {
     _op : _op, 
-    fieldGen : fieldGen};};
-Elm.ScoreGraph = function(elm){
-  var N = Elm.Native, _N = N.Utils(elm), _L = N.List(elm), _E = N.Error(elm), _J = N.JavaScript(elm), _str = _J.toString, $moduleName = 'ScoreGraph';
-  var Text = Elm.Text(elm);
-  var Text = Elm.Text(elm);
-  var Basics = Elm.Basics(elm);
-  var Signal = Elm.Signal(elm);
-  var List = Elm.List(elm);
-  var Maybe = Elm.Maybe(elm);
-  var Time = Elm.Time(elm);
-  var Prelude = Elm.Prelude(elm);
-  var Graphics = Graphics || {};
-  Graphics.Element = Elm.Graphics.Element(elm);
-  var Color = Elm.Color(elm);
-  var Graphics = Graphics || {};
-  Graphics.Collage = Elm.Graphics.Collage(elm);
-  var Mouse = Elm.Mouse(elm);
-  var Graph = Elm.Graph(elm);
-  var Window = Elm.Window(elm);
-  var _op = {};
-  var team4Scores = A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
-    return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.constant(Color.purple)), A3(Signal.foldp, F2(function(t, xs){
-    return List.take(5000)(_L.Cons({ctor:"_Tuple2", _0:t, _1:((Basics.snd(List.head(xs))+(Basics.cos(t)*6))+0.5)},xs));}), _J.toList([{ctor:"_Tuple2", _0:0, _1:10}]), Time.every((Time.second/10))));
-  var team3Scores = A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
-    return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.constant(Color.green)), A3(Signal.foldp, F2(function(t, xs){
-    return List.take(5000)(_L.Cons({ctor:"_Tuple2", _0:t, _1:((Basics.snd(List.head(xs))+(Basics.sin(t)*6))+0.5)},xs));}), _J.toList([{ctor:"_Tuple2", _0:0, _1:10}]), Time.every((Time.second/10))));
-  var team2Scores = A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
-    return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.constant(Color.blue)), A3(Signal.foldp, F2(function(arg2, xs){
-    return function(){
-      switch (arg2.ctor) {
-        case '_Tuple2':
-          return List.take(5000)(_L.Cons({ctor:"_Tuple2", _0:arg2._0, _1:Basics.toFloat(arg2._1)},xs));
-      }_E.Case($moduleName,'on line 16, column 58 to 90')}();}), _J.toList([]), Time.timestamp(A2(Signal.sampleOn, Time.fps(10), Mouse.y))));
-  var team1Scores = A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
-    return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.constant(A3(Color.rgb, 255, 100, 0))), A3(Signal.foldp, F2(function(arg2, xs){
-    return function(){
-      switch (arg2.ctor) {
-        case '_Tuple2':
-          return List.take(5000)(_L.Cons({ctor:"_Tuple2", _0:arg2._0, _1:Basics.toFloat(arg2._1)},xs));
-      }_E.Case($moduleName,'on line 12, column 69 to 101')}();}), _J.toList([]), Time.timestamp(A2(Signal.sampleOn, Time.fps(10), Mouse.x))));
-  var scoreGraph = A2(Signal._op['~'], A2(Signal._op['~'], A2(Signal._op['<~'], F3(function(xs, wx, wy){
-    return A5(Graph.timeline, wx, (wy/2|0), (1/(Basics.toFloat(wx)/30)), (1/2), xs);}), Signal.combine(_J.toList([team1Scores,team2Scores,team3Scores,team4Scores]))), Window.width), Window.height);
-  return elm.ScoreGraph = {
-    _op : _op, 
-    scoreGraph : scoreGraph};};
+    fieldGen : fieldGen, 
+    chatbox : chatbox};};
 Elm.Graph = function(elm){
   var N = Elm.Native, _N = N.Utils(elm), _L = N.List(elm), _E = N.Error(elm), _J = N.JavaScript(elm), _str = _J.toString, $moduleName = 'Graph';
   var Text = Elm.Text(elm);
