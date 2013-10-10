@@ -58,4 +58,4 @@ chatbox =
   in
     ( fst <~ fieldState
     , snd <~ fieldState
-    )
+    ) 

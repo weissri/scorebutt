@@ -29,6 +29,15 @@ Elm.FieldGen = function(elm){
           }break;
       }
       return _J.toList([]);}();});
+  var radioButton = function($){
+    return Signal.merges(List.map(function(arg1){
+      return function(){
+        switch (arg1.ctor) {
+          case '_Tuple2':
+            return A2(Signal._op['<~'], function(arg1){
+              return function(){
+                return arg1._1;}();}, arg1._0);
+        }_E.Case($moduleName,'on line 64, column 50 to 61')}();})($));};
   var insert = F3(function(n, v, xs){
     return function(){
       switch (xs.ctor) {
@@ -75,7 +84,7 @@ Elm.FieldGen = function(elm){
             case '_Tuple2':
               return ((arg2._0&&!_N.eq(arg2._1.string,_str(''))) ? {ctor:"_Tuple2", _0:A3(cbGen.field, Basics.id, _str('Say something'), Graphics.Input.emptyFieldState), _1:arg2._1.string} : (Basics.otherwise ? {ctor:"_Tuple2", _0:A3(cbGen.field, Basics.id, _str('Say something'), arg2._1), _1:_str('')} : _E.If($moduleName,'between lines 52 and 54')));
           }_E.Case($moduleName,'between lines 52 and 54')}();}();}), {ctor:"_Tuple2", _0:A3(cbGen.field, Basics.id, _str('Say something'), Graphics.Input.emptyFieldState), _1:_str('')}, A2(Signal._op['~'], A2(Signal._op['<~'], F2(function(v0, v1){
-      return {ctor:"_Tuple2", _0:v0, _1:v1};}), Signal.dropRepeats(Keyboard.enter)), cbGen.events));
+      return {ctor:"_Tuple2", _0:v0, _1:v1};}), Keyboard.enter), cbGen.events));
     return {ctor:"_Tuple2", _0:A2(Signal._op['<~'], Basics.fst, fieldState), _1:A2(Signal._op['<~'], Basics.snd, fieldState)};}();
   var FieldGen = F2(function(a, b){
     return {
